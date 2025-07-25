@@ -15,6 +15,10 @@ void prepend_node(linkedList **head, int value);
 int list_length(linkedList *head);
 int delete_node(linkedList **head, int value);
 void print_list(linkedList *head);
+int insert_at_position(linkedList **head, int value, int position);
+void reverse_list(linkedList **head);
+void reverse_list_iter(linkedList **head);
+
 
 
 
@@ -38,8 +42,30 @@ int main() {
     delete_node(head_ptr, 8);
     
     print_list(head);
-
+    
     printf("list length: %d\n", list_length(head));
+    
+    insert_at_position(head_ptr, 7, -1);
+    insert_at_position(head_ptr, 7, 4);
+    insert_at_position(head_ptr, 12, 0);
+    insert_at_position(head_ptr, 41, 2);
+    
+    print_list(head);
+    printf("list length: %d\n", list_length(head));
+    
+    reverse_list(head_ptr);
+    
+    print_list(head);
+
+    delete_node(head_ptr, 7);
+    delete_node(head_ptr, 4);
+    delete_node(head_ptr, 9);
+    delete_node(head_ptr, 5);
+    delete_node(head_ptr, 41);
+    
+    reverse_list(head_ptr);
+    
+    print_list(head);
 
     free_list(head);
 }
@@ -57,7 +83,6 @@ void free_list(linkedList *headlist)
         headlist = templist;
     }
 }
-
 
 linkedList* create_node(int value)
 {
@@ -177,4 +202,69 @@ void print_list(linkedList *head)
         head = head->next;
     }
     printf("]\n");
+}
+
+int insert_at_position(linkedList **head, int value, int position)
+{
+    linkedList *tempNode = *head;
+    int length = list_length(tempNode);
+
+    if (tempNode == NULL)
+        return 0;
+
+    if (length < position || 0 > position)
+        return 0;
+    
+    if (length == position)
+    {
+        append_node(head, value);
+        return 1;
+    }
+
+    if (position == 0)
+    {
+        prepend_node(head, value);
+        return 1;
+    }
+    
+
+    int current_pos = 1;
+    linkedList *prevNode = tempNode;
+    tempNode = tempNode->next;
+
+
+    while (current_pos != position)
+    {
+        if (tempNode == NULL)
+            return 0;
+
+        prevNode = tempNode;
+        tempNode = tempNode->next;
+        current_pos++;
+    }
+    
+    linkedList *newNode = create_node(value);
+
+    prevNode->next = newNode;
+    newNode->next = tempNode;
+
+    return 1;
+}
+
+void reverse_list(linkedList **head)
+{
+    linkedList *prevNode = NULL;
+    linkedList *currNode = *head;
+    linkedList *nextNode = NULL;
+    
+
+    while (currNode != NULL)
+    {
+        nextNode = currNode->next;
+        currNode->next = prevNode;
+        prevNode = currNode;
+        currNode = nextNode;
+    }
+
+    *head = prevNode;
 }
