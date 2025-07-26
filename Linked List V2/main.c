@@ -17,7 +17,7 @@ int delete_node(linkedList **head, int value);
 void print_list(linkedList *head);
 int insert_at_position(linkedList **head, int value, int position);
 void reverse_list(linkedList **head);
-void reverse_list_iter(linkedList **head);
+void reverse_list_recursive(linkedList **head);
 
 
 
@@ -53,17 +53,17 @@ int main() {
     print_list(head);
     printf("list length: %d\n", list_length(head));
     
-    reverse_list(head_ptr);
+    // reverse_list(head_ptr);
     
-    print_list(head);
+    // print_list(head);
 
-    delete_node(head_ptr, 7);
-    delete_node(head_ptr, 4);
-    delete_node(head_ptr, 9);
-    delete_node(head_ptr, 5);
-    delete_node(head_ptr, 41);
+    // delete_node(head_ptr, 7);
+    // delete_node(head_ptr, 4);
+    // delete_node(head_ptr, 9);
+    // delete_node(head_ptr, 5);
+    // delete_node(head_ptr, 41);
     
-    reverse_list(head_ptr);
+    reverse_list_recursive(head_ptr);
     
     print_list(head);
 
@@ -257,7 +257,7 @@ void reverse_list(linkedList **head)
     linkedList *currNode = *head;
     linkedList *nextNode = NULL;
     
-
+    
     while (currNode != NULL)
     {
         nextNode = currNode->next;
@@ -265,6 +265,48 @@ void reverse_list(linkedList **head)
         prevNode = currNode;
         currNode = nextNode;
     }
-
+    
     *head = prevNode;
 }
+
+
+// Not By Me (AI generate this one ಥ_ಥ "really hard")
+linkedList* reverse_list_recursive_helper(linkedList *currNode)
+{
+    // Base case: empty list or last node
+    if (currNode == NULL || currNode->next == NULL)
+        return currNode;
+
+    // Recursively reverse the rest of the list
+    linkedList *newHead = reverse_list_recursive_helper(currNode->next);
+
+    // After recursion: reverse the link
+    currNode->next->next = currNode;
+    currNode->next = NULL;
+
+    return newHead; // Return new head up the call stack
+}
+
+void reverse_list_recursive(linkedList **head)
+{
+    *head = reverse_list_recursive_helper(*head);
+}
+
+// This my one (The AI correct this one after a hours of thinking and debug .·´¯`(>▂<)´¯`·. )
+// void reverse_list_recursive(linkedList **head)
+// {
+//     linkedList *currNode = *head;
+//     linkedList *nextNode;
+
+//     if (currNode == NULL || currNode->next == NULL)
+//     {
+//         *head = currNode;
+//         return;
+//     }
+
+//     nextNode = currNode->next;
+
+//     reverse_list_recursive(&(currNode->next));
+//     nextNode->next = currNode;
+//     currNode->next = NULL;
+// }
